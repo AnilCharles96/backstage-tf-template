@@ -8,3 +8,9 @@ To start the app, run:
 yarn install
 yarn start
 ```
+
+
+@backstage/plugin-scaffolder-backend-module-shell
+
+
+yarn add @backstage/catalog-client @backstage/integration @backstage/plugin-scaffolder-backend @backstage/backend-plugin-api

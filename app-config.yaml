@@ -81,6 +81,12 @@ catalog:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
+      
+    # Azure Terraform Infra Template
+    - type: file
+      target: ../../templates/terraform-azure-infra/template.yaml
+      rules:
+        - allow: [Template]
 
     # Local example template
     - type: file

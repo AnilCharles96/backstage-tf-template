@@ -50,5 +50,11 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.4.1",
+  "dependencies": {
+    "@backstage/backend-plugin-api": "^1.4.1",
+    "@backstage/catalog-client": "^1.10.2",
+    "@backstage/integration": "^1.17.1",
+    "@backstage/plugin-scaffolder-backend": "^2.1.0"
+  }
 }
