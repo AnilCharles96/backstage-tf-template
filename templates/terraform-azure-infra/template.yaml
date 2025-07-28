@@ -1,0 +1,110 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: azure-tf-template
+  title: Azure Terraform Provisioning Template
+  description: Provisions Azure RG, Storage Account, and Container
+spec:
+  owner: sre-team
+  type: infrastructure
+
+  parameters:
+    - title: Azure Resource Group
+      properties:
+        resource_group_name:
+          type: string
+          title: Resource Group Name
+          description: The name of the Azure Resource Group to create
+          minLength: 1
+          maxLength: 90
+          pattern: '^[a-zA-Z0-9._-]*[a-zA-Z0-9]$'
+          ui:autofocus: true
+        resource_group_tag:
+          type: string
+          title: Resource Group Tag
+          default: department:SRE
+          description: A key-value pair tag for the resource group.
+          pattern: '^[^:]+:[^:]+$'
+
+    - title: Azure Storage Account
+      properties:
+        storage_account_name:
+          type: string
+          title: Storage Account Name
+          description: The name of the Azure Storage Account. Must be unique, 3-24 lowercase letters or numbers.
+          minLength: 3
+          maxLength: 24
+          pattern: '^[a-z0-9]+$'
+        storage_account_resource_group:
+          type: string
+          title: Storage Account Resource Group
+          default: sre-challenge-flaschenpost
+          description: The name of the resource group where the storage account will be created.
+        sku:
+          type: string
+          title: SKU
+          default: Standard_LRS
+          enum: [Standard_LRS, Premium_LRS, Standard_GRS]
+        access_tier:
+          type: string
+          title: Access Tier
+          default: Hot
+          enum: [Hot, Cool]
+        storage_account_tag:
+          type: string
+          title: Storage Account Tag
+          description: A key-value pair tag for the storage account (e.g., 'key:value').
+          default: department:SRE
+          pattern: '^[^:]+:[^:]+$'
+
+    - title: Azure Storage Account Container
+      properties:
+        container_name:
+          type: string
+          title: Container Name
+          description: The name of the Azure Storage Container. Must be 3-63 lowercase letters, numbers, or hyphens.
+          default: sre
+          minLength: 3
+          maxLength: 63
+          pattern: '^[a-z0-9](?:[a-z0-9-]{1,61}[a-z0-9])?$'
+        container_type:
+          type: string
+          title: Container Type
+          default: private
+          enum: [private, blob]
+
+  steps:
+    - id: fetch
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./output
+        values:
+          resource_group_name: ${{ parameters.resource_group_name }}
+          resource_group_tag: ${{ parameters.resource_group_tag }}
+          storage_account_name: ${{ parameters.storage_account_name }}
+          storage_account_resource_group: ${{ parameters.storage_account_resource_group }}
+          sku: ${{ parameters.sku }}
+          access_tier: ${{ parameters.access_tier }}
+          storage_account_tag: ${{ parameters.storage_account_tag }}
+          container_name: ${{ parameters.container_name }}
+          container_type: ${{ parameters.container_type }}
+
+    - name: Results
+      action: debug:log
+      input:
+        listWorkspace: with-contents
+
+    # - id: publish-to-github
+    #   name: Publish to GitHub
+    #   action: publish:github 
+    #   input:
+    #     repoUrl: 'github.com?repo=test-backstage-tf-template&owner=AnilCharles96'
+    #     defaultBranch: main # Or 'master'
+    #     sourcePath: ./output # Path to the generated content
+    #     gitCommitMessage: 'Push back from backstage'
+    #     protectDefaultBranch: true
+
+
+  
